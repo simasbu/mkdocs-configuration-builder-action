@@ -1,16 +1,24 @@
 import * as core from '@actions/core'
 import {wait} from './wait'
+import { getDirectoryTree } from './directory-tree';
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    const siteName = core.getInput('siteName', { required: true });
+    const directoryTree = getDirectoryTree(localDirectory, homePageTitle);
+    const rootDefinition: SiteDefinition = {};
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const home = getSiteDefinition(directoryTree, rootDefinition, workingDirectory);
 
-    core.setOutput('time', new Date().toTimeString())
+    let outputPath = '';
+
+    if (workingDirectory) {
+      fs.ensureDirSync(workingDirectory);
+      outputPath = `${workingDirectory}/`;
+    }
+
+    fs.writeFileSync(`${outputPath}site.yaml`, JSON.stringify({ spaceKey, home }));
+
   } catch (error) {
     core.setFailed(error.message)
   }

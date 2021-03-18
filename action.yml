@@ -1,11 +1,10 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'MkDocs configuration builder'
+description: 'Builds a YAML configuration file for MkDocs'
+author: 'Simonas Bunevicius'
 inputs:
-  milliseconds: # change this
+  siteName:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'value on for site_name key'
 runs:
   using: 'node12'
   main: 'dist/index.js'
