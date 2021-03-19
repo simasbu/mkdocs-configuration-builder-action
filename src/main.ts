@@ -1,27 +1,20 @@
-import * as core from '@actions/core'
-import {wait} from './wait'
+import * as core from '@actions/core';
+import { wait } from './wait';
 import { getDirectoryTree } from './directory-tree';
+import { getMkDocs } from './site-definition';
 
 async function run(): Promise<void> {
   try {
     const siteName = core.getInput('siteName', { required: true });
-    const directoryTree = getDirectoryTree(localDirectory, homePageTitle);
-    const rootDefinition: SiteDefinition = {};
+    const directoryTree = getDirectoryTree('src');
+    const mkDocs = getMkDocs(directoryTree, siteName, ['techdocs-core']);
+    console.log('POOP', mkDocs);
 
-    const home = getSiteDefinition(directoryTree, rootDefinition, workingDirectory);
-
-    let outputPath = '';
-
-    if (workingDirectory) {
-      fs.ensureDirSync(workingDirectory);
-      outputPath = `${workingDirectory}/`;
-    }
-
-    fs.writeFileSync(`${outputPath}site.yaml`, JSON.stringify({ spaceKey, home }));
-
+    // transform the `mkDocs` into YAML
+    // fs.writeFileSync(`mkdocs.yaml`, JSON.stringify({ spaceKey, home }));
   } catch (error) {
-    core.setFailed(error.message)
+    core.setFailed(error.message);
   }
 }
 
-run()
+run();

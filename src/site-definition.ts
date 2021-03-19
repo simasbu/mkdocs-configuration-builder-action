@@ -1,22 +1,17 @@
+import { dir } from 'console';
 import { DirectoryTree } from 'directory-tree';
-import * as fs from 'fs';
-import * as YAML from 'yaml';
 import { replaceUnderscoresWithSpaces } from './utils';
 
-export interface SiteDefinition {
-  uri: string;
-  parentPageTitle: string;
-  name: string;
-  labels?: string[];
-  children?: SiteDefinition[];
-  attachments?: Attachment[];
+export interface MkDocs {
+  siteName: string;
+  nav?: NavItem[];
+  plugins: string[];
 }
 
-interface Attachment {
-  uri: string;
-  name: string;
-  comment: string;
-  version: string;
+export interface NavItem {
+  name?: string;
+  uri?: string;
+  children?: NavItem[];
 }
 
 /**
@@ -25,18 +20,17 @@ interface Attachment {
  * @param {SiteDefinition} siteDefinition Initial site definition.
  * @param {string} workingDirectory A prefix of the path that will be removed from the final uri value of each site definition entity.
  */
-export function getSiteDefinition(
-  { children = [], name, path, type }: DirectoryTree,
-  siteDefinition: SiteDefinition,
-  workingDirectory: string
-): SiteDefinition {
-  if (type === 'directory') {
-    siteDefinition.name = replaceUnderscoresWithSpaces(name);
-    siteDefinition.uri = getUri(path, workingDirectory);
-    siteDefinition.children = getChildren(children, workingDirectory);
-  }
+export function getMkDocs(
+  directoryTree: DirectoryTree,
+  siteName: string,
+  plugins: string[] = []
+): MkDocs {
+  let navItems: NavItem[] | undefined = [];
 
-  return siteDefinition;
+  if (directoryTree.children != undefined) {
+    navItems = getNavItems(directoryTree, {}).children;
+  }
+  return { siteName, plugins, nav: navItems };
 }
 
 /**
@@ -45,16 +39,20 @@ export function getSiteDefinition(
  * @param directoryTree The directory tree where the child entities will be searched for.
  * @param workingDirectory A prefix of the path that will be removed from the final uri value of each site definition entity.
  */
-function getChildren(
-  directoryTree: DirectoryTree[],
-  workingDirectory: string
-): SiteDefinition[] | undefined {
-  const children = directoryTree
-    .filter(({ type }) => type === 'directory')
-    .filter(({ name }) => name !== 'attachments')
-    .map(child => getSiteDefinition(child, {} as SiteDefinition, workingDirectory));
+function getNavItems(directoryTree: DirectoryTree, navItem: NavItem): NavItem {
+  if (directoryTree.children) {
+    const children = directoryTree.children
+      .filter(({ type }) => type === 'directory')
+      .filter(({ name }) => name !== 'attachments')
+      .map(child => getNavItems(child, {} as NavItem));
 
-  return children.length ? children : undefined;
+    navItem.children = children;
+    navItem.name = directoryTree.name;
+  } else {
+    navItem.uri = directoryTree.path;
+  }
+
+  return navItem;
 }
 
 /**
