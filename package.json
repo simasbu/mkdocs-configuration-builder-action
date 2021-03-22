@@ -12,7 +12,7 @@
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
     "all": "npm run build && npm run format && npm run lint && npm run package && npm test",
-    "start": "ts-node main.ts"
+    "start": "ts-node src/main.ts"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.21",
+    "@types/js-yaml": "^4.0.0",
     "@types/node": "^14.14.35",
     "@typescript-eslint/parser": "^4.18.0",
     "@vercel/ncc": "^0.27.0",
@@ -43,6 +44,7 @@
     "prettier": "2.2.1",
     "ts-jest": "^26.5.4",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.3",
+    "yaml": "^1.10.2"
   }
 }

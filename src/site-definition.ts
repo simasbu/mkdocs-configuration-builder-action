@@ -23,14 +23,20 @@ export interface NavItem {
 export function getMkDocs(
   directoryTree: DirectoryTree,
   siteName: string,
-  plugins: string[] = []
+  plugins: string[] = [],
+  workingDirectory: string
 ): MkDocs {
   let navItems: NavItem[] | undefined = [];
 
   if (directoryTree.children != undefined) {
-    navItems = getNavItems(directoryTree, {}).children;
+    const children = getNavItems(directoryTree, {}, workingDirectory);
+    const flatten = ([] as NavItem[]).concat(...children);
+
+    navItems = flatten;
   }
-  return { siteName, plugins, nav: navItems };
+  // console.log(navItems);
+
+  return { siteName, plugins, nav: navItems[0].children };
 }
 
 /**
@@ -39,34 +45,68 @@ export function getMkDocs(
  * @param directoryTree The directory tree where the child entities will be searched for.
  * @param workingDirectory A prefix of the path that will be removed from the final uri value of each site definition entity.
  */
-function getNavItems(directoryTree: DirectoryTree, navItem: NavItem): NavItem {
-  if (directoryTree.children) {
+function getNavItems(
+  directoryTree: DirectoryTree,
+  navItem: NavItem,
+  workingDirectory: string
+): NavItem[] {
+  let navItems: NavItem[] = [];
+  const mdExtension = '.md';
+  if (directoryTree.children === undefined) {
+    return navItems;
+  }
+  if (directoryTree.children && hasChildDirectories(directoryTree)) {
     const children = directoryTree.children
       .filter(({ type }) => type === 'directory')
       .filter(({ name }) => name !== 'attachments')
-      .map(child => getNavItems(child, {} as NavItem));
+      .map(child => getNavItems(child, {} as NavItem, workingDirectory));
 
-    navItem.children = children;
+    const flatten = ([] as NavItem[]).concat(...children);
+
+    navItem.children = flatten;
     navItem.name = directoryTree.name;
+
+    const readmes = directoryTree.children
+      .filter(({ type }) => type !== 'directory')
+      .filter(({ extension }) => extension === mdExtension)
+      .map(
+        c =>
+          ({
+            ...(c.name !== 'README.md' && {
+              name: c.name.substring(0, c.name.length - mdExtension.length),
+            }),
+            uri: substringWorkingDirectory(directoryTree.path + '/' + c.name, workingDirectory),
+          } as NavItem)
+      );
+
+    navItem.children = [...navItem.children, ...readmes];
+
+    navItems.push(navItem);
   } else {
-    navItem.uri = directoryTree.path;
+    const readmes = directoryTree.children
+      .filter(({ type }) => type !== 'directory')
+      .filter(({ extension }) => extension === mdExtension)
+      .map(
+        c =>
+          ({
+            name:
+              c.name == 'README.md'
+                ? directoryTree.name
+                : c.name.substring(0, c.name.length - mdExtension.length),
+            uri: substringWorkingDirectory(directoryTree.path + '/' + c.name, workingDirectory),
+          } as NavItem)
+      );
+    return readmes;
   }
 
-  return navItem;
+  return navItems;
 }
 
-/**
- * Returns the uri for the the provided directory path. Uri will always have a `README.md` at the end.
- * @param directoryPath Directory path that needs to be converted to a uri.
- * @param workingDirectory A prefix of the path that will be removed from the final uri value of each site definition entity.
- */
-function getUri(directoryPath: string, workingDirectory: string): string {
-  if (directoryPath.startsWith(workingDirectory)) {
-    const uri = `${substringWorkingDirectory(directoryPath, workingDirectory)}/README.md`;
-    return uri.startsWith('/') ? uri.substring(1, uri.length) : uri;
-  } else {
-    return `${directoryPath}/README.md`;
-  }
+function hasChildDirectories(tree: DirectoryTree): boolean {
+  return (
+    tree.children != undefined &&
+    tree.children.some(({ type, name }) => type === 'directory' && name !== 'attachments')
+  );
 }
 
 /**
@@ -74,7 +114,7 @@ function getUri(directoryPath: string, workingDirectory: string): string {
  * @param directoryPath Directory path from which the working directory path should be removed.
  * @param workingDirectory A prefix of the path that will be removed from the final uri value of each site definition entity.
  */
-function substringWorkingDirectory(directoryPath: string, workingDirectory: string): string {
+export function substringWorkingDirectory(directoryPath: string, workingDirectory: string): string {
   if (directoryPath.startsWith(workingDirectory)) {
     const newPath = directoryPath.substr(workingDirectory.length, directoryPath.length);
     return newPath.startsWith('/') ? newPath.substring(1, newPath.length) : newPath;
