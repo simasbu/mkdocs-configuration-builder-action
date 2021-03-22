@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.transform = void 0;
 function transform(mkdocs) {
     var _a;
-    let mk = Object.assign({ siteName: mkdocs.siteName, plugins: mkdocs.plugins }, (mkdocs.nav && {
+    let mk = Object.assign({ site_name: mkdocs.siteName, plugins: mkdocs.plugins }, (mkdocs.nav && {
         nav: (_a = mkdocs.nav) === null || _a === void 0 ? void 0 : _a.map(c => transformNavItem(c)),
     }));
     return mk;

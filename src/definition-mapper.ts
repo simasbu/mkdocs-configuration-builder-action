@@ -1,6 +1,6 @@
 import { MkDocs, NavItem } from './mkdocs-definition';
 export interface MkDocsYaml {
-  siteName: string;
+  site_name: string;
   nav?: Array<NavItemYaml | string>;
   plugins: string[];
 }
@@ -11,7 +11,7 @@ export interface NavItemYaml {
 
 export function transform(mkdocs: MkDocs): MkDocsYaml {
   let mk: MkDocsYaml = {
-    siteName: mkdocs.siteName,
+    site_name: mkdocs.siteName,
     plugins: mkdocs.plugins,
     ...(mkdocs.nav && {
       nav: mkdocs.nav?.map(c => transformNavItem(c)),
