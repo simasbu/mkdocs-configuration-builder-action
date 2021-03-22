@@ -1,4 +1,3 @@
-import { dir } from 'console';
 import { DirectoryTree } from 'directory-tree';
 import { replaceUnderscoresWithSpaces } from './utils';
 
@@ -14,12 +13,6 @@ export interface NavItem {
   children?: NavItem[];
 }
 
-/**
- * Generates the Site Definition object which will be consumed by the Confluence.
- * @param {DirectoryTree} directoryTree Directory tree object that needs to be mapped to the Site Definition object.
- * @param {SiteDefinition} siteDefinition Initial site definition.
- * @param {string} workingDirectory A prefix of the path that will be removed from the final uri value of each site definition entity.
- */
 export function getMkDocs(
   directoryTree: DirectoryTree,
   siteName: string,
@@ -34,17 +27,10 @@ export function getMkDocs(
 
     navItems = flatten;
   }
-  // console.log(navItems);
 
   return { siteName, plugins, nav: navItems[0].children };
 }
 
-/**
- * Returns the list of site definition entities that may be found in the provided directory tree.
- * If no entities are found returns `undefined`.
- * @param directoryTree The directory tree where the child entities will be searched for.
- * @param workingDirectory A prefix of the path that will be removed from the final uri value of each site definition entity.
- */
 function getNavItems(
   directoryTree: DirectoryTree,
   navItem: NavItem,
@@ -64,7 +50,7 @@ function getNavItems(
     const flatten = ([] as NavItem[]).concat(...children);
 
     navItem.children = flatten;
-    navItem.name = directoryTree.name;
+    navItem.name = replaceUnderscoresWithSpaces(directoryTree.name);
 
     const readmes = directoryTree.children
       .filter(({ type }) => type !== 'directory')
@@ -73,7 +59,9 @@ function getNavItems(
         c =>
           ({
             ...(c.name !== 'README.md' && {
-              name: c.name.substring(0, c.name.length - mdExtension.length),
+              name: replaceUnderscoresWithSpaces(
+                c.name.substring(0, c.name.length - mdExtension.length)
+              ),
             }),
             uri: substringWorkingDirectory(directoryTree.path + '/' + c.name, workingDirectory),
           } as NavItem)
@@ -91,8 +79,10 @@ function getNavItems(
           ({
             name:
               c.name == 'README.md'
-                ? directoryTree.name
-                : c.name.substring(0, c.name.length - mdExtension.length),
+                ? replaceUnderscoresWithSpaces(directoryTree.name)
+                : replaceUnderscoresWithSpaces(
+                    c.name.substring(0, c.name.length - mdExtension.length)
+                  ),
             uri: substringWorkingDirectory(directoryTree.path + '/' + c.name, workingDirectory),
           } as NavItem)
       );
