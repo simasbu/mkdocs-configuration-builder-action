@@ -1,0 +1,12 @@
+siteName: Poop
+plugins:
+  - techdocs-core
+nav:
+  - hey: hey/README.md
+  - somepage:
+      - child:
+          - README copy: somepage/child/grand/README copy.md
+          - grand: somepage/child/grand/README.md
+          - somepage/child/README.md
+      - README copy: somepage/README copy.md
+      - somepage/README.md

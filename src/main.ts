@@ -1,19 +1,22 @@
-import * as core from '@actions/core'
-import {wait} from './wait'
+import * as core from '@actions/core';
+import * as fs from 'fs';
+import yaml from 'js-yaml';
+import { transform } from './definition-mapper';
+import { getDirectoryTree } from './directory-tree';
+import { getMkDocs } from './mkdocs-definition';
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    const siteName = core.getInput('siteName', { required: true });
+    const docsFolder = core.getInput('docsFolder', { required: true });
+    const directoryTree = getDirectoryTree(docsFolder);
+    const mkDocs = getMkDocs(directoryTree, siteName, ['techdocs-core'], docsFolder);
+    const transformed = transform(mkDocs);
+    const yamlStr = yaml.dump(transformed);
+    fs.writeFileSync('mkdocs.yml', yamlStr, 'utf8');
   } catch (error) {
-    core.setFailed(error.message)
+    core.setFailed(error.message);
   }
 }
 
-run()
+run();
