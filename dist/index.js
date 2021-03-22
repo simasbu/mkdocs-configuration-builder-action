@@ -120,7 +120,7 @@ function run() {
             const mkDocs = mkdocs_definition_1.getMkDocs(directoryTree, siteName, ['techdocs-core'], docsFolder);
             const transformed = definition_mapper_1.transform(mkDocs);
             const yamlStr = js_yaml_1.default.dump(transformed);
-            fs.writeFileSync('mkdocs.yaml', yamlStr, 'utf8');
+            fs.writeFileSync('mkdocs.yml', yamlStr, 'utf8');
         }
         catch (error) {
             core.setFailed(error.message);
