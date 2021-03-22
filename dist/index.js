@@ -11,16 +11,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.transform = void 0;
 function transform(mkdocs) {
     var _a;
-    let mk = Object.assign({ site_name: mkdocs.siteName, plugins: mkdocs.plugins }, (mkdocs.nav && {
+    return Object.assign({ site_name: mkdocs.siteName, plugins: mkdocs.plugins }, (mkdocs.nav && {
         nav: (_a = mkdocs.nav) === null || _a === void 0 ? void 0 : _a.map(c => transformNavItem(c)),
     }));
-    return mk;
 }
 exports.transform = transform;
 function transformNavItem(navItem) {
     if (navItem.children !== undefined && navItem.children.length > 0) {
         if (navItem.name === undefined) {
-            console.log('Nav item should have either children or a name');
             throw new Error('Nav item should have either children or a name');
         }
         return {
@@ -35,7 +33,6 @@ function transformNavItem(navItem) {
         }
         else {
             if (navItem.uri === undefined) {
-                console.log('Nav item should have either uri or a name');
                 throw new Error('Nav item should have either uri or a name');
             }
             return navItem.uri;
@@ -141,7 +138,7 @@ exports.substringWorkingDirectory = exports.getMkDocs = void 0;
 const utils_1 = __nccwpck_require__(563);
 function getMkDocs(directoryTree, siteName, plugins = [], workingDirectory) {
     let navItems = [];
-    if (directoryTree.children != undefined) {
+    if (directoryTree.children !== undefined) {
         const children = getNavItems(directoryTree, {}, workingDirectory);
         const flatten = [].concat(...children);
         navItems = flatten;
@@ -150,7 +147,7 @@ function getMkDocs(directoryTree, siteName, plugins = [], workingDirectory) {
 }
 exports.getMkDocs = getMkDocs;
 function getNavItems(directoryTree, navItem, workingDirectory) {
-    let navItems = [];
+    const navItems = [];
     const mdExtension = '.md';
     if (directoryTree.children === undefined) {
         return navItems;
@@ -168,7 +165,7 @@ function getNavItems(directoryTree, navItem, workingDirectory) {
             .filter(({ extension }) => extension === mdExtension)
             .map(c => (Object.assign(Object.assign({}, (c.name !== 'README.md' && {
             name: utils_1.replaceUnderscoresWithSpaces(c.name.substring(0, c.name.length - mdExtension.length)),
-        })), { uri: substringWorkingDirectory(directoryTree.path + '/' + c.name, workingDirectory) })));
+        })), { uri: substringWorkingDirectory(`${directoryTree.path}/${c.name}`, workingDirectory) })));
         navItem.children = [...navItem.children, ...readmes];
         navItems.push(navItem);
     }
@@ -177,17 +174,17 @@ function getNavItems(directoryTree, navItem, workingDirectory) {
             .filter(({ type }) => type !== 'directory')
             .filter(({ extension }) => extension === mdExtension)
             .map(c => ({
-            name: c.name == 'README.md'
+            name: c.name === 'README.md'
                 ? utils_1.replaceUnderscoresWithSpaces(directoryTree.name)
                 : utils_1.replaceUnderscoresWithSpaces(c.name.substring(0, c.name.length - mdExtension.length)),
-            uri: substringWorkingDirectory(directoryTree.path + '/' + c.name, workingDirectory),
+            uri: substringWorkingDirectory(`${directoryTree.path}/${c.name}`, workingDirectory),
         }));
         return readmes;
     }
     return navItems;
 }
 function hasChildDirectories(tree) {
-    return (tree.children != undefined &&
+    return (tree.children !== undefined &&
         tree.children.some(({ type, name }) => type === 'directory' && name !== 'attachments'));
 }
 /**

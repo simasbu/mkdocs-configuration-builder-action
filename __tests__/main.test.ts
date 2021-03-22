@@ -51,7 +51,7 @@ test('generates correct mkdocs object', () => {
   const actualMkDocs = getMkDocs(directoryTree, 'site name', ['techdocs-core'], '__tests__/docs');
   const transformed = transform(actualMkDocs);
   const expectedMkDocs: MkDocsYaml = {
-    siteName: 'site name',
+    site_name: 'site name',
     plugins: ['techdocs-core'],
     nav: [
       { hey: 'hey/README.md' },

@@ -1,0 +1,12 @@
+site_name: my-service
+plugins:
+  - techdocs-core
+nav:
+  - hey: hey/README.md
+  - somepage with underscore:
+      - child:
+          - README copy: somepage_with_underscore/child/grand/README copy.md
+          - grand: somepage_with_underscore/child/grand/README.md
+          - somepage_with_underscore/child/README.md
+      - README copy: somepage_with_underscore/README copy.md
+      - somepage_with_underscore/README.md

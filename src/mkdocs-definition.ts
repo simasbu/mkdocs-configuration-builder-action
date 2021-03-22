@@ -21,7 +21,7 @@ export function getMkDocs(
 ): MkDocs {
   let navItems: NavItem[] | undefined = [];
 
-  if (directoryTree.children != undefined) {
+  if (directoryTree.children !== undefined) {
     const children = getNavItems(directoryTree, {}, workingDirectory);
     const flatten = ([] as NavItem[]).concat(...children);
 
@@ -36,7 +36,7 @@ function getNavItems(
   navItem: NavItem,
   workingDirectory: string
 ): NavItem[] {
-  let navItems: NavItem[] = [];
+  const navItems: NavItem[] = [];
   const mdExtension = '.md';
   if (directoryTree.children === undefined) {
     return navItems;
@@ -63,7 +63,7 @@ function getNavItems(
                 c.name.substring(0, c.name.length - mdExtension.length)
               ),
             }),
-            uri: substringWorkingDirectory(directoryTree.path + '/' + c.name, workingDirectory),
+            uri: substringWorkingDirectory(`${directoryTree.path}/${c.name}`, workingDirectory),
           } as NavItem)
       );
 
@@ -78,12 +78,12 @@ function getNavItems(
         c =>
           ({
             name:
-              c.name == 'README.md'
+              c.name === 'README.md'
                 ? replaceUnderscoresWithSpaces(directoryTree.name)
                 : replaceUnderscoresWithSpaces(
                     c.name.substring(0, c.name.length - mdExtension.length)
                   ),
-            uri: substringWorkingDirectory(directoryTree.path + '/' + c.name, workingDirectory),
+            uri: substringWorkingDirectory(`${directoryTree.path}/${c.name}`, workingDirectory),
           } as NavItem)
       );
     return readmes;
@@ -94,7 +94,7 @@ function getNavItems(
 
 function hasChildDirectories(tree: DirectoryTree): boolean {
   return (
-    tree.children != undefined &&
+    tree.children !== undefined &&
     tree.children.some(({ type, name }) => type === 'directory' && name !== 'attachments')
   );
 }
