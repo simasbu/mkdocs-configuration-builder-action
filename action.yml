@@ -5,6 +5,9 @@ inputs:
   siteName:
     required: true
     description: 'value on for site_name key'
+  docsFolder:
+    required: true
+    description: 'directory where documentation is placed'
 runs:
   using: 'node12'
   main: 'dist/index.js'
