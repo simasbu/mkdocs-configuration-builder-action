@@ -11,7 +11,7 @@ inputs:
   outputDirectory:
     required: false
     description: 'directory where mkdocs will be placed'
-  docsFolder:
+  docsDir:
     required: false
     description: 'value on for docs_dir key'
 runs:
