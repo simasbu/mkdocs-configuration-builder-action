@@ -23,3 +23,10 @@ jobs:
         with:
           siteName: 'my site name'
           docsFolder: '__tests__/docs'
+      - name: Read mkdocs.yml
+        id: read-mkdocs
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./mkdocs.yml
+      - name: Echo mkdocs.yml
+        run: echo ${{ steps.package.read-mkdocs.content }}
