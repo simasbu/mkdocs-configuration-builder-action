@@ -20,6 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./
+        id: mkdoks
         with:
           siteName: 'my site name'
           docsFolder: '__tests__/docs'

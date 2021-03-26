@@ -3,6 +3,7 @@ export interface MkDocsYaml {
   site_name: string;
   nav?: Array<NavItemYaml | string>;
   plugins: string[];
+  docs_dir?: string;
 }
 
 export interface NavItemYaml {
