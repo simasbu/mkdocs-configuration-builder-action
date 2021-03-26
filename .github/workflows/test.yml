@@ -24,13 +24,5 @@ jobs:
         with:
           siteName: 'my site name'
           docsFolder: '__tests__/docs'
-
-      - name: Echo mkdocs.yml
-        run: echo ${{ steps.mkdoks-generation.outputs.content }}
-      - name: Read mkdocs.yml
-        id: read-mkdocs
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./mkdocs.yml
-      - name: Echo from other action mkdocs.yml
-        run: echo ${{ steps.read-mkdocs.outputs.content }}
+      - name: List files in the working directory
+        run: ls -la
