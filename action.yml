@@ -11,6 +11,9 @@ inputs:
   outputDirectory:
     required: false
     description: 'directory where mkdocs will be placed'
+  docsFolder:
+    required: false
+    description: 'value on for docs_dir key'
 runs:
   using: 'node12'
   main: 'dist/index.js'

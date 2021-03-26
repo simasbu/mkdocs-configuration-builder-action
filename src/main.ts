@@ -10,9 +10,13 @@ async function run(): Promise<void> {
     const siteName = core.getInput('siteName', { required: true });
     const docsFolder = core.getInput('docsFolder', { required: true });
     const outputDirectory = core.getInput('outputDirectory', { required: false });
+    const docsDir = core.getInput('docsDir', { required: false });
     const directoryTree = getDirectoryTree(docsFolder);
     const mkDocs = getMkDocs(directoryTree, siteName, ['techdocs-core'], docsFolder);
     const transformed = transform(mkDocs);
+    if (docsDir) {
+      transformed.docs_dir = docsDir;
+    }
     const yamlStr = yaml.dump(transformed);
     core.setOutput('filepath', directoryTree.path);
     core.setOutput('content', yamlStr);
