@@ -13,6 +13,8 @@ async function run(): Promise<void> {
     const mkDocs = getMkDocs(directoryTree, siteName, ['techdocs-core'], docsFolder);
     const transformed = transform(mkDocs);
     const yamlStr = yaml.dump(transformed);
+    core.setOutput('MkDocs generated from path', directoryTree.path);
+    core.setOutput('MkDocs content', yamlStr);
     fs.writeFileSync('mkdocs.yml', yamlStr, 'utf8');
   } catch (error) {
     core.setFailed(error.message);
