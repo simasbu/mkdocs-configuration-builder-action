@@ -24,12 +24,3 @@ jobs:
         with:
           siteName: 'my site name'
           docsFolder: '__tests__/docs'
-
-      - name: List files in the working directory
-        run: ls -la
-
-      - name: Echo mkdocs.yml content
-        run: echo ${{ steps.mkdoks.outputs.content }}
-
-      - name: Echo path that mkdocs.yml was generated from
-        run: echo ${{ steps.mkdoks.outputs.filepath }}
