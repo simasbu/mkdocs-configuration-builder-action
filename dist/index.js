@@ -117,7 +117,8 @@ function run() {
             const mkDocs = mkdocs_definition_1.getMkDocs(directoryTree, siteName, ['techdocs-core'], docsFolder);
             const transformed = definition_mapper_1.transform(mkDocs);
             const yamlStr = js_yaml_1.default.dump(transformed);
-            const outputPath = core.getInput('outputPath', { required: false });
+            const outputPath = core.getInput('outputPath', { required: true });
+            console.log("Output Path: " + outputPath);
             fs.writeFileSync(outputPath, yamlStr, 'utf8');
         }
         catch (error) {
@@ -4824,7 +4825,7 @@ module.exports = require("path");;
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __nccwpck_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -4837,7 +4838,7 @@ module.exports = require("path");;
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		var threw = true;
 /******/ 		try {
@@ -4846,14 +4847,14 @@ module.exports = require("path");;
 /******/ 		} finally {
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat */
-/******/ 	
+/******/
 /******/ 	__nccwpck_require__.ab = __dirname + "/";/************************************************************************/
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
