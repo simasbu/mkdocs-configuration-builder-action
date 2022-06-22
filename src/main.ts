@@ -16,7 +16,6 @@ async function run(): Promise<void> {
     const outputPath = core.getInput('outputPath', { required: true });
     core.debug(`output path: ${outputPath}`);
     core.debug(yamlStr);
-    console.log(`output path: ${outputPath}`);
     fs.writeFileSync(outputPath, yamlStr, 'utf8');
   } catch (error) {
     core.setFailed(error.message);
