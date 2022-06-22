@@ -8,6 +8,11 @@ inputs:
   docsFolder:
     required: true
     description: 'directory where documentation is placed'
+  outputPath:
+    required: true
+    description: 'directory where documentation is placed'  
+    default: 'mkdocs.yml'
+      
 runs:
   using: 'node12'
   main: 'dist/index.js'
