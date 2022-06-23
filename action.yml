@@ -10,9 +10,9 @@ inputs:
     description: 'directory where documentation is placed'
   outputPath:
     required: true
-    description: 'directory where documentation is placed'  
+    description: 'directory where generated file will place'
     default: 'mkdocs.yml'
-      
+
 runs:
   using: 'node12'
   main: 'dist/index.js'
