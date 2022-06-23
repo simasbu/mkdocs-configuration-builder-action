@@ -9,6 +9,7 @@ import { getMkDocs, MkDocs } from '../src/mkdocs-definition';
 test('success flow', () => {
   process.env['INPUT_SITENAME'] = 'my-service';
   process.env['INPUT_DOCSFOLDER'] = '__tests__/docs';
+  process.env['INPUT_OUTPUTPATH'] = 'mkdocs.yml';
   const np = process.execPath;
   const ip = path.join(__dirname, '..', 'lib', 'main.js');
   const options: cp.ExecFileSyncOptions = {
